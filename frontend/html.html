@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Records</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Roboto', sans-serif;
+    }
+
+    body {
+      background: #1e1e2f;
+      color: #f5f5f5;
+      padding: 40px 20px;
+    }
+
+    .wrapper {
+      max-width: 800px;
+      margin: auto;
+      background: #292941;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+    }
+
+    h1 {
+      text-align: center;
+      color: #ffd369;
+      margin-bottom: 30px;
+    }
+
+    label {
+      display: block;
+      margin: 10px 0 5px;
+      font-weight: bold;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      background-color: #3a3a5a;
+      color: #fff;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: space-between;
+      margin: 20px 0;
+    }
+
+    input[type="submit"] {
+      flex: 1;
+      margin: 0 5px;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      background-color: #ffd369;
+      color: #1e1e2f;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #ffc107;
+    }
+
+    #studentSaved {
+      text-align: center;
+      margin-top: 10px;
+      color: #00e676;
+      font-weight: bold;
+    }
+
+    table {
+      width: 100%;
+      margin-top: 20px;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #444;
+    }
+
+    th {
+      background-color: #34345e;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <h1>🎓 Student Records</h1>
+
+    <label for="studentid">Student ID</label>
+    <input type="text" id="studentid">
+
+    <label for="name">Name</label>
+    <input type="text" id="name">
+
+    <label for="class">Class</label>
+    <input type="text" id="class">
+
+    <label for="age">Age</label>
+    <input type="text" id="age">
+
+    <div class="buttons">
+      <input type="submit" id="savestudent" value="Save">
+      <input type="submit" id="getstudents" value="View All">
+    </div>
+
+    <p id="studentSaved"></p>
+
+    <table id="studentTable">
+      <thead>
+        <tr>
+          <th>Student ID</th>
+          <th>Name</th>
+          <th>Class</th>
+          <th>Age</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Data will appear here -->
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    // Save student data
+    document.getElementById("savestudent").addEventListener("click", function () {
+      const studentID = document.getElementById("studentid").value.trim();
+      const name = document.getElementById("name").value.trim();
+      const className = document.getElementById("class").value.trim();
+      const age = document.getElementById("age").value.trim();
+
+      if (!studentID || !name || !className || !age) {
+        alert("Please fill in all fields!");
+        return;
+      }
+
+      const student = { studentID, name, class: className, age };
+      const students = JSON.parse(localStorage.getItem("students") || "[]");
+      students.push(student);
+      localStorage.setItem("students", JSON.stringify(students));
+
+      document.getElementById("studentSaved").textContent = "✅ Student data saved successfully!";
+      document.getElementById("studentid").value = "";
+      document.getElementById("name").value = "";
+      document.getElementById("class").value = "";
+      document.getElementById("age").value = "";
+    });
+
+    // Display students in table
+    document.getElementById("getstudents").addEventListener("click", function () {
+      const students = JSON.parse(localStorage.getItem("students") || "[]");
+      const tableBody = document.querySelector("#studentTable tbody");
+
+      tableBody.innerHTML = "";
+
+      students.forEach(student => {
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+          <td>${student.studentID}</td>
+          <td>${student.name}</td>
+          <td>${student.class}</td>
+          <td>${student.age}</td>
+        `;
+
+        tableBody.appendChild(row);
+      });
+    });
+  </script>
+</body>
+</html>
